@@ -41,6 +41,32 @@ export const Route = createFileRoute("/")({
           "Insurance, investments and financial planning for individuals and businesses. 20+ years of trusted expertise.",
       },
       { property: "og:image", content: logoAsset.url },
+      { property: "og:url", content: "/" },
+    ],
+    links: [
+      { rel: "canonical", href: "/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "Buckskart",
+              alternateName: "A Unit of SEK Finserve LLP",
+              url: "/",
+              logo: logoAsset.url,
+            },
+            {
+              "@type": "WebSite",
+              name: "Buckskart — Financial Planning & Investments",
+              url: "/",
+            },
+          ],
+        }),
+      },
     ],
   }),
 });

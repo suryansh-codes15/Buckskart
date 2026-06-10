@@ -1,0 +1,10 @@
+# Buckskart
+
+> Buckskart, a unit of SEK Finserve LLP, helps individuals and businesses grow and protect wealth through insurance, mutual funds, bonds, PMS and expert financial planning. 20+ years of trusted expertise.
+
+## Pages
+- [Home](/): Finance made interesting and simple. Explore protection and investment solutions, financial calculators, and connect with advisors.
+- [Services](/#services): Insurance (life, health, asset, travel) and investment solutions (mutual funds, corporate deposits, bonds, PMS).
+- [Calculators](/#calculators): EMI, wealth creation, retirement and child future calculators.
+- [Why Us](/#why-us): 20+ years of experience, independent advice, curated partner mix, goal-based planning.
+- [Contact](/#contact): Get in touch with a Buckskart advisor.
