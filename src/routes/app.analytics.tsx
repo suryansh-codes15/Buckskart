@@ -24,7 +24,7 @@ import { CostTrendChart } from "@/components/analytics/CostTrendChart";
 
 export const Route = createFileRoute("/app/analytics")({
   component: AnalyticsPage,
-  head: () => ({ meta: [{ title: "Analytics — Stackwise" }] }),
+  head: () => ({ meta: [{ title: "Analytics — Buckskart" }] }),
 });
 
 function AnalyticsPage() {
@@ -132,11 +132,11 @@ function AnalyticsPage() {
                   <ErrorBoundary>
                     <div className="grid gap-6 lg:grid-cols-2">
                       <div>
-                        <h3 className="mb-3 text-sm font-medium text-muted-foreground">Items by Category</h3>
+                        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Items by Category</h2>
                         <StockByCategoryChart items={items} categories={categories} />
                       </div>
                       <div>
-                        <h3 className="mb-3 text-sm font-medium text-muted-foreground">Stock Status Distribution</h3>
+                        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Stock Status Distribution</h2>
                         <StockStatusChart items={items} />
                       </div>
                     </div>
