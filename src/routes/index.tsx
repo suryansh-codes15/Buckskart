@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import {
   Shield,
   HeartPulse,
@@ -23,6 +23,7 @@ import {
   MapPin,
 } from "lucide-react";
 import logoAsset from "@/assets/buckskart-logo.png.asset.json";
+import logoVideo from "@/assets/make_the_video.mp4";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -127,34 +128,39 @@ function Leaf({
 /* ─── Animated Logo (leaves drift gently) ──────────────────────── */
 function AnimatedLogo({ className = "" }: { className?: string }) {
   return (
-    <div className={`relative inline-block ${className}`}>
+    <div className={`relative inline-block w-full overflow-hidden rounded-2xl ${className}`}>
       {/* Floating leaves around logo */}
       <motion.div
-        className="absolute -top-6 -right-4 text-emerald-500"
+        className="absolute -top-6 -right-4 text-emerald-500 z-10"
         animate={{ y: [0, -8, 0], rotate: [0, 12, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
         <Leaf size={28} color="#16a34a" rotate={15} duration={6} />
       </motion.div>
       <motion.div
-        className="absolute -top-4 right-8"
+        className="absolute -top-4 right-8 z-10"
         animate={{ y: [0, 6, 0], rotate: [0, -10, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
       >
         <Leaf size={22} color="#22c55e" rotate={-20} duration={7} delay={0.5} />
       </motion.div>
       <motion.div
-        className="absolute -bottom-3 -left-3"
+        className="absolute -bottom-3 -left-3 z-10"
         animate={{ y: [0, 5, 0], rotate: [0, 8, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       >
         <Leaf size={18} color="#4ade80" rotate={45} duration={8} delay={1} />
       </motion.div>
 
-      <motion.img
-        src={logoAsset.url}
-        alt="Buckskart — A Unit of SEK Finserve LLP"
-        className="relative w-full h-auto"
+      <motion.video
+        src={logoVideo}
+        poster={logoAsset.url}
+        preload="auto"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="w-full h-auto mix-blend-multiply relative z-0"
         initial={{ opacity: 0, scale: 0.92 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9, ease: "easeOut" }}
@@ -202,6 +208,19 @@ const stats = [
 /* ─── Page ──────────────────────────────────────────────────────── */
 function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
+
+  useEffect(() => {
+    const agreed = localStorage.getItem("buckskart_disclaimer_agreed");
+    if (!agreed) {
+      setShowDisclaimer(true);
+    }
+  }, []);
+
+  const handleAgree = () => {
+    localStorage.setItem("buckskart_disclaimer_agreed", "true");
+    setShowDisclaimer(false);
+  };
 
   return (
     <div className="min-h-screen bg-[oklch(0.99_0.01_140)] text-foreground overflow-hidden">
@@ -209,7 +228,7 @@ function LandingPage() {
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-white/70 border-b border-emerald-100">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="#top" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="Buckskart" className="h-8 w-auto" />
+            <img src={logoAsset.url} alt="Buckskart" className="h-8 w-auto mix-blend-multiply" />
           </a>
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((l) => (
@@ -594,7 +613,7 @@ function LandingPage() {
       <footer className="border-t border-emerald-100 bg-emerald-50/40 px-6 py-12">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <img src={logoAsset.url} alt="Buckskart" className="h-10 w-auto" />
+            <img src={logoAsset.url} alt="Buckskart" className="h-10 w-auto mix-blend-multiply" />
             <div className="flex gap-6 text-sm text-emerald-900/70">
               {navLinks.map((l) => (
                 <a key={l.label} href={l.href} className="hover:text-emerald-700">
@@ -622,6 +641,94 @@ function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Disclaimer Pop-up Modal */}
+      <AnimatePresence>
+        {showDisclaimer && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop with elegant glassmorphism blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={handleAgree}
+              className="absolute inset-0 bg-emerald-950/40 backdrop-blur-md"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="relative bg-white/95 backdrop-blur-xl border border-emerald-100 shadow-2xl rounded-3xl max-w-2xl w-full p-6 md:p-8 max-h-[85vh] flex flex-col z-10"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between border-b border-emerald-50 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700 shrink-0">
+                    <Shield className="w-6 h-6 animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-bold text-emerald-950">
+                      Welcome to Buckskart
+                    </h3>
+                    <p className="text-xs text-emerald-900/60 font-medium">
+                      Please read and accept the disclaimer to continue
+                    </p>
+                  </div>
+                </div>
+                {/* Close Button */}
+                <button 
+                  onClick={handleAgree}
+                  className="text-emerald-900/40 hover:text-emerald-900 hover:bg-emerald-50 p-1.5 rounded-full transition-colors cursor-pointer"
+                  aria-label="Close disclaimer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Scrollable Contents */}
+              <div className="flex-1 overflow-y-auto my-6 pr-2 text-sm text-emerald-900/80 leading-relaxed space-y-4">
+                <p className="font-semibold text-emerald-950">
+                  Dear visitor, welcome to Buckskart. Please read the disclaimer before using the website.
+                </p>
+                <p>
+                  The information published on this website is intended for general information purpose only & does not constitute a solicitation, suggestions, inducement, offer or recommendation to purchase or sell any stocks, scripts of debentures, mutual fund units, shares, securities or any financial instruments or to enter into any other transaction.
+                </p>
+                <p>
+                  All the information is subject to change without notice. The information published should not be used as a substitute for any form of advice. The information on this site has not been prepared taking into account specific investment objectives, financial situations and needs of any particular investor, and therefore may not be suitable for you. Investor must consult his/her investment adviser /distributor with his investment objectives and risk taking ability.
+                </p>
+                <p>
+                  <strong>SEK Finserve</strong> is a mere distributor of financial products and facilitate customer to choose the right product as per their requirement. SEK Finserve does not guarantee any returns on investments made in financial products.
+                </p>
+                <p>
+                  Loans are solely at the discretion of lending company. All products including loans, insurance & investment features rates and cost are subject to change without any prior notice. Mutual funds are subject to market risks, read scheme information document carefully before investing. Mutual fund performance data source is <span className="font-medium text-emerald-700">advisorkhoj.com</span>.
+                </p>
+                <p>
+                  Life & Health insurance are solely at discretion of insurance company.
+                </p>
+                <p className="font-medium text-emerald-950 border-t border-emerald-50 pt-3">
+                  We do not accept any cash of cheque in favor of SEK Finserve unless it is agreed.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="border-t border-emerald-50 pt-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center sm:justify-between">
+                <span className="text-xs text-emerald-900/50">
+                  By clicking Agree, you accept the terms above.
+                </span>
+                <button
+                  onClick={handleAgree}
+                  className="px-8 py-3.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold transition-all shadow-xl shadow-emerald-700/25 hover:shadow-emerald-700/40 hover:-translate-y-0.5 text-center cursor-pointer text-sm"
+                >
+                  I Agree & Proceed
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
